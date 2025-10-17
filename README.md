@@ -1,61 +1,107 @@
-# Interfacing_UR_manipulator_in_Isaac_sim_with_ROS2_and_Moveit2
+🦾 Interfacing UR Manipulator in Isaac Sim with ROS2 and MoveIt2
 
-In this repository, I will let you go through simulating a UR10e robot in Isaac Sim and then go interface with ROS2 (humble) and Moveit2.
-The guidelines will help you to simulate your own robot and do customization you needs.
+This repository demonstrates how to simulate a UR10e robot in Isaac Sim and interface it with ROS2 (Humble) and MoveIt2.
+The guidelines will help you simulate your own robot and customize it for your specific needs.
 
-Below steps are tested on a Ubuntu 22.04 system with 8GB Nvidia GPU and 32GB RAM
+🧩 System Setup
 
-Installed Isaac-sim 5.0.0 in a virtual environment (with python 3.11) provided by UV
+Tested Configuration
 
-Installed ROS2 humble on system level (python 3.10)
+OS: Ubuntu 22.04
 
-Since you should need different shell environment for isaac sim (python 3.11) and ROS (python 3.10), I am using below commands for each:
-Isaac_sim:
+GPU: NVIDIA (8 GB VRAM)
+
+RAM: 32 GB
+
+Isaac Sim: 5.0.0 (Python 3.11 in a virtual environment)
+
+ROS2: Humble (system-level, Python 3.10)
+
+⚙️ Environment Setup
+1️⃣ Isaac Sim Environment (Python 3.11)
+
+Activate the Isaac Sim virtual environment and set required paths:
+
 source ~/env_isaaclab/bin/activate
 export ROS_DISTRO=humble
 export RMW_IMPLEMENTATION=rmw_fastrtps_cpp
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/prem/env_isaaclab/lib/python3.11/site-packages/isaacsim/exts/isaacsim.ros2.bridge/humble/lib
 
-you can store these command in a file_name.sh file and do:
-source file_name.sh, to prepare the environment for isaac
 
-ROS:
+💡 Tip:
+Save the above commands in a file (e.g., isaac_env.sh) and source it whenever needed:
+
+source isaac_env.sh
+
+2️⃣ ROS2 Environment (Python 3.10)
 source /opt/ros/humble/setup.bash
 
+🔗 ROS2 and Isaac Sim Bridging
 
-Ros2 and issacsim bridging:
-https://docs.isaacsim.omniverse.nvidia.com/latest/installation/install_ros.html
+Official documentation:
+👉 Isaac Sim ROS Bridge Installation Guide
 
-Isaac_ros2_workspace:
-download the isaac_ros2 workspace from below and use its humble_ws folder as your ROS workspace (since I am using ROS2 humble)
-https://github.com/isaac-sim/IsaacSim-ros_workspaces/tree/IsaacSim-5.0.0
+🧱 Isaac ROS2 Workspace Setup
 
-Isaac-sim (in virtual env) and ROS (system) communicates using topic_based_ros2_control package
+Download the official Isaac ROS2 workspace and use the humble_ws folder as your working ROS2 workspace (since we’re using Humble):
+
+🔗 Isaac Sim ROS Workspaces (IsaacSim-5.0.0)
+
+Isaac Sim (running in Python 3.11) and ROS 2 (Python 3.10) communicate using the
+topic_based_ros2_control
+ package.
+
+🤖 UR ROS2 Description and Driver
+
+Download the official Universal Robots packages for ROS2:
+
+Universal Robots ROS2 Description
+
+Universal Robots ROS2 Driver
+
+You’ll need to make a few modifications to integrate them with Isaac Sim — examples are provided in this repository.
+
+🏗️ Building the Workspace
+cd humble_ws
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --symlink-install
+source install/setup.bash
 
 
-UR_ROS2 description and driver:
-Download the original official drivers from below links. You need to modify certain things to work it out with Isaac
-https://github.com/UniversalRobots/Universal_Robots_ROS2_Description
-https://github.com/UniversalRobots/Universal_Robots_ROS2_Driver
+⚠️ You must source install/setup.bash each time you open a new terminal.
+
+🚀 Overall Workflow
+
+Run Isaac Sim and load the UR10e robot:
+
+Top-Left → Create → Robots → Asset Browser → UR10.usd
+
+Create an Action Graph and configure the ROS2 bridge nodes.
+
+(Follow this helpful tutorial: YouTube Video
+)
+
+Run the simulation in Isaac Sim and verify that appropriate ROS2 topics are being published:
+
+ros2 topic list
 
 
-Building the humble_ws workspace:
-1) cd to /humble_ws
-2) rosdep install --from-paths src --ignore-src -r -y
-3) colcon build --symlink-install
-4) source install/setup.bash   (you need to run this each time you open a new terminal)
+Launch MoveIt2 along with RViz, ros2_control, and topic_based_ros2_control.
 
-Overall workflow:
-1) Run isaac sim and load UR10.usd from (Top-left -> Create -> Robots -> Asset Browser)
-2) You need to create an ActionGrasp and configure a few things (I followed this (https://youtu.be/pGje2slp6-s))
-3) Run the simulation in Isaac_sim and check if it publish appropiate topics
-4) launch moveit2 along with rviz, ros2_control, topi_based_ros2_control 
+🧠 MoveIt2 Configuration
 
-For moveit part above, refer my code as an example and you need to do following changes:
-1) In /src/Universal_Robots_ROS2_Driver-humble/ur_moveit_config/ur_moveit_isaac.launch.py
-.
-.
-.
+Refer to this repository’s example configuration.
+You’ll need to edit the following file to match your robot and controller setup:
 
-In progress...
-Stay Tuned...
+src/Universal_Robots_ROS2_Driver-humble/ur_moveit_config/ur_moveit_isaac.launch.py
+
+
+Example snippets and explanations are included in comments within the file.
+
+🚧 In Progress
+
+Work in progress...
+Stay tuned for full launch scripts, parameter files, and detailed setup instructions!
+
+Authored by Prem Raj Kala
+🧠 Robotics | Computer Vision | ROS 2 | Isaac Sim
